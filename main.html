@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ctrl-paqueteria — App</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-main">
+  <header class="app-header">
+    <div class="brand-mini">
+      <h1>ctrl-paqueteria</h1>
+      <div id="saludo" class="muted">Buen turno</div>
+    </div>
+    <div>
+      <button id="logoutBtn" class="btn ghost">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <!-- El contenedor principal ahora controla la pantalla visible -->
+  <main id="app-main-container" class="app-main container show-paqueteria">
+    
+    <!-- Mover statusMsg aquí para que sea visible en todas las pantallas -->
+    <div id="statusMsg" style="margin-bottom: 12px;"></div>
+
+    <!-- Wrapper para la animación de deslizamiento -->
+    <div class="screens-wrapper">
+
+      <!-- Screens -->
+      <section id="screen-paqueteria" class="screen card">
+        <h3>Registrar Paquetería 📦</h3>
+
+        <div class="block">
+          <label class="field">
+            <span>Domicilio</span>
+            <input id="domicilioInput" placeholder="Busca domicilio (autocompletar)" list="domList" />
+            <datalist id="domList"></datalist>
+          </label>
+          
+          <label class="field">
+            <span>Guía (últimos 6 dígitos)</span>
+            <input id="guia" inputmode="numeric" maxlength="20" placeholder="escribe guía o parte" />
+            <datalist id="guiaList"></datalist>
+            <div id="guiaSuggestions" class="suggestions"></div>
+          </label>
+        </div>
+
+        <div class="block">
+          <label class="field">
+            <span>¿A qué nombre está el paquete?</span>
+            <input id="nombreDest" placeholder="Nombre destinatario" list="nombresList" />
+            <datalist id="nombresList"></datalist>
+          </label>
+
+          <label class="field">
+            <span>Paquetería</span>
+            <input id="paqueteriaInput" placeholder="Selecciona o escribe paquetería" list="paqList" />
+            <datalist id="paqList"></datalist>
+          </label>
+        </div>
+
+        <div class="block">
+          <label class="file-btn field">
+            <input id="fotoInput" accept="image/*" type="file" capture="environment" />
+            <button id="fotoBtn" class="btn ghost full">📸 Tomar foto del paquete</button>
+          </label>
+          <div id="fotoPreview" class="preview"></div>
+        </div>
+
+        <div class="row">
+          <button id="recibirBtn" class="btn primary">Recibir paquete</button>
+          <button id="entregarBtn" class="btn">Entregar paquete</button>
+          <button id="entregarVariosBtn" class="btn hidden" disabled>Entregar (Varios)</button>
+        </div>
+
+        <!-- El statusMsg ya no está aquí -->
+      </section>
+
+      <section id="screen-directorio" class="screen card">
+        <h3>Directorio 📓</h3>
+
+        <form id="domForm">
+          <label class="field">
+            <span>Domicilio</span>
+            <input id="domCalle" placeholder="Calle, Nº, Torre, Piso..." required />
+          </label>
+
+          <label class="field">
+            <span>Residente (op1)</span>
+            <input id="domResidente1" placeholder="Nombre residente" required />
+          </label>
+          
+          <!-- INICIO MODIFICACIÓN: Campo de Teléfono -->
+          <label class="field">
+            <span>Teléfono (para WhatsApp)</span>
+            <input id="domTelefono" type="tel" placeholder="Ej: 521XXXXXXXXXX" />
+            <span class="muted" style="font-size: 11px; margin-top: 4px;">Incluir cód. de país + cód. de área + número (todo junto). Ej: 521...</span>
+          </label>
+          <!-- FIN MODIFICACIÓN -->
+
+          <label class="field">
+            <span>Nota</span>
+            <textarea id="domNota" rows="2" placeholder="Nota (puerta, referencia...)"></textarea>
+          </label>
+
+          <div id="moreResidents"></div>
+
+          <div class="row">
+            <button id="addResident" type="button" class="btn ghost">Añadir más residentes</button>
+            <button id="saveDomicilio" type="submit" class="btn primary">Guardar</button>
+          </div>
+        </form>
+
+        <h4>Tabla domicilios</h4>
+        <div id="tablaDomicilios" class="table"></div>
+      </section>
+
+      <section id="screen-historial" class="screen card">
+        <h3>Historial de paquetes 📦</h3>
+
+        <div class="filters">
+          <input id="buscarHist" placeholder="Buscar por guía, nombre o estado" />
+          <select id="filtroEstado">
+            <option value="">Todos</option>
+            <option value="en_caseta">En caseta</option>
+            <option value="entregado">Entregado</option>
+          </select>
+          <div class="filter-date-range">
+            <label class="date-picker-btn">
+              <span id="fechaDesdeLabel">🗓️ Desde</span>
+              <input type="date" id="fechaDesde">
+            </label>
+            <span class="date-range-separator">a</span>
+            <label class="date-picker-btn">
+              <span id="fechaHastaLabel">🗓️ Hasta</span>
+              <input type="date" id="fechaHasta">
+            </label>
+          </div>
+        </div>
+
+        <div id="tablaPaquetes" class="table"></div>
+      </section>
+      
+    </div> <!-- Fin .screens-wrapper -->
+  </main>
+
+  <!-- Modal de Confirmación ÚNICA -->
+  <div id="confirmEntregarModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Confirmar Entrega</h3>
+      <p id="confirmEntregarMsg">¿Estás seguro?</p>
+      <div class="row">
+        <button id="cancelEntregarBtn" class="btn ghost full">Cancelar</button>
+        <button id="confirmEntregarBtn" class="btn primary full">Continuar a Firma</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmación VARIOS -->
+  <div id="confirmEntregarVariosModal" class="modal hidden">
+    <div class="modal-content">
+      <h3>Confirmar Entrega Múltiple</h3>
+      <p>Se entregarán los siguientes paquetes "en caseta" para el domicilio:</p>
+      <strong id="domicilioVariosTxt"></strong>
+      <div id="listaPaquetesVarios">
+        <!-- La lista se genera aquí por JS -->
+      </div>
+      <p class="muted">Se usará una sola firma y foto de ID para todos.</p>
+      <div class="row">
+        <button id="cancelVariosBtn" class="btn ghost full">Cancelar</button>
+        <button id="confirmVariosBtn" class="btn primary full">Continuar a Firma</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Firma -->
+  <div id="firmaModal" class="modal modal-scrollable hidden">
+    <div class="modal-content">
+      <button id="cerrarFirma" class="btn ghost" style="float:right; padding: 4px 8px; font-size: 16px;">X</button>
+      <h4>Dibuje su firma dentro del recuadro</h4>
+      <canvas id="firmaCanvas"></canvas>
+      <button id="limpiarFirma" class="btn ghost full" style="margin-bottom: 10px;">Limpiar</button>
+      
+      <label class="file-btn field">
+        <input id="idFotoInput" accept="image/*" type="file" capture="environment" />
+        <button id="idFotoBtn" class="btn ghost full">🆔 Tomar foto de ID (Obligatorio)</button>
+      </label>
+      <div id="idPreview" class="preview"></div>
+
+      <div class="row" style="margin-top: 16px;">
+        <button id="guardarFirma" class="btn primary full">Guardar firma y finalizar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Visor de Imágenes -->
+  <div id="imageViewer" class="modal hidden">
+    <div class="viewer-content">
+      <button id="closeImageViewer" class="btn ghost" style="position:absolute;right:14px;top:14px">X</button>
+      <button id="prevImg" class="btn ghost" style="position:absolute;left:14px;top:50%">◀</button>
+      <img id="viewerImg" src="" alt="imagen" />
+      <button id="nextImg" class="btn ghost" style="position:absolute;right:14px;top:50%">▶</button>
+      <div id="viewerMeta" class="muted" style="text-align:center;padding:8px"></div>
+    </div>
+  </div>
+
+  <!-- bottom nav -->
+  <nav class="bottom-nav">
+    <button data-screen="screen-paqueteria" class="nav-btn active">📦 Paquetería</button>
+    <button data-screen="screen-directorio" class="nav-btn">📓 Directorio</button>
+    <button data-screen="screen-historial" class="nav-btn">🕓 Historial</button>
+  </nav>
+
+  <script src="sql-lite.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
+

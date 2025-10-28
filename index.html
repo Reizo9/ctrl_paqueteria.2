@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ctrl-paqueteria — Login</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="page-login">
+  <main class="container">
+    <header class="brand">
+      <h1>ctrl-paqueteria</h1>
+      <p class="subtitle">Gestión de paquetería — acceso guardia</p>
+    </header>
+
+    <!-- Wrapper para la animación -->
+    <div class="wrapper">
+      
+      <!-- Formulario de Login -->
+      <section class="form-box login">
+        <form id="loginForm" autocomplete="on">
+          <h3>Acceso Guardia</h3>
+          <label class="field">
+            <span class="sr-only">Usuario</span>
+            <input id="loginUsuario" name="usuario" required placeholder="Usuario" />
+          </label>
+
+          <label class="field">
+            <span class="sr-only">Contraseña</span>
+            <input id="loginPass" name="password" type="password" required placeholder="Contraseña" />
+          </label>
+
+          <div class="row">
+            <button type="submit" class="btn primary">Entrar</button>
+          </div>
+
+          <div class="login-register-link">
+            <p>¿No tienes cuenta? 
+              <button type="button" id="showRegister" class="btn-link">Regístrate</button>
+            </p>
+          </div>
+        </form>
+      </section>
+
+      <!-- Formulario de Registro -->
+      <section class="form-box register">
+        <form id="registerForm">
+          <h3>Registro Guardia</h3>
+          <label class="field">
+            <span class="sr-only">Nombre completo</span>
+            <input id="regNombre" required placeholder="Nombre completo" />
+          </label>
+
+          <label class="field">
+            <span class="sr-only">Contraseña</span>
+            <input id="regPass" type="password" required placeholder="Contraseña" />
+          </label>
+
+          <label class="field">
+            <span class="sr-only">Confirma contraseña</span>
+            <input id="regPass2" type="password" required placeholder="Confirma contraseña" />
+          </label>
+
+          <div class="row">
+            <button type="submit" class="btn primary">Crear cuenta</button>
+          </div>
+
+          <div class="login-register-link">
+            <p>¿Ya tienes cuenta? 
+              <button type="button" id="showLogin" class="btn-link">Acceder</button>
+            </p>
+          </div>
+        </form>
+      </section>
+
+    </div> <!-- Fin .wrapper -->
+
+    <!-- Modal de Aviso de Privacidad -->
+    <div id="privacyModal" class="modal modal-scrollable hidden">
+      <div class="modal-content">
+        <button id="closePrivacyBtn" class="btn ghost" style="float:right; padding: 4px 8px; font-size: 16px;">X</button>
+        <h3>Aviso de Privacidad</h3>
+        <div id="privacyContent" style="font-size: 14px; line-height: 1.6; text-align: left; max-height: 60vh; overflow-y: auto; padding-right: 10px;">
+          
+          <p><strong>Identidad y Domicilio del Responsable</strong><br>
+          La aplicación "ctrl-paqueteria" (en adelante "la Aplicación") es una herramienta desarrollada por Reizo Ramon Atarashi Quintero (en adelante "el Desarrollador"). El responsable del tratamiento de los datos personales recabados a través de esta Aplicación es la Administración del condominio o la Empresa de Seguridad (en adelante "el Responsable") que contrata o implementa el uso de esta herramienta para sus operaciones diarias.</p>
+
+          <p><strong>Datos Personales Recabados</strong><br>
+          La Aplicación recopila y almacena localmente en el dispositivo (mediante IndexedDB) los siguientes datos:</p>
+          <ul>
+            <li><strong>Del Personal de Guardia:</strong> Nombre completo, usuario y contraseña (cifrada).</li>
+            <li><strong>De Residentes y Paquetes:</strong> Domicilio (calle, número, etc.), nombre del residente(s), número de teléfono, nombre del destinatario, número de guía y nombre de la paquetería.</li>
+            <li><strong>Datos Personales Sensibles (Prueba de Entrega):</strong> Fotografías de los paquetes, fotografías de la identificación oficial de quien recibe y la firma digital de quien recibe.</li>
+          </ul>
+
+          <p><strong>Finalidad del Tratamiento de Datos</strong><br>
+          Los datos personales recabados serán utilizados para las siguientes finalidades primarias:</p>
+          <ul>
+            <li>Controlar el acceso del personal de seguridad a la Aplicación.</li>
+            <li>Registrar la recepción de paquetería en las instalaciones.</li>
+            <li>Registrar y verificar fehacientemente la entrega de paquetería al residente o persona autorizada, utilizando la firma y la foto de ID como prueba de entrega.</li>
+            <li>Mantener un historial de todos los movimientos de paquetería para fines de consulta, auditoría y aclaraciones.</li>
+          </ul>
+          <p>Como finalidad secundaria, el número de teléfono del residente podrá ser utilizado para enviar notificaciones vía WhatsApp sobre la llegada o entrega de sus paquetes.</p>
+
+          <p><strong>Almacenamiento y Transferencia de Datos</strong><br>
+          Se le informa que todos los datos personales y sensibles mencionados son almacenados de forma local en la base de datos (IndexedDB) del dispositivo (teléfono móvil o tableta) utilizado por el personal de guardia. <strong>Los datos no se transfieren a ningún servidor externo, nube o tercero por parte de la Aplicación.</strong> El "Responsable" (Administración) es el único custodio de la información contenida en el dispositivo. El uso de la función de notificación por WhatsApp implica una interacción con dicho servicio externo bajo los términos y condiciones de WhatsApp (Meta, Inc.).</p>
+
+          <p><strong>Derechos ARCO</strong><br>
+          Usted o su representante legal podrán ejercer cualquiera de los derechos de Acceso, Rectificación, Cancelación u Oposición (en lo sucesivo "Derechos ARCO"), así como revocar su consentimiento para el tratamiento de sus datos personales, comunicándose directamente con el "Responsable" (la Administración del condominio o Empresa de Seguridad), quien gestiona el dispositivo y los datos contenidos en él.</p>
+
+          <p><strong>Cambios al Aviso de Privacidad</strong><br>
+          Cualquier modificación a este Aviso de Privacidad será notificada por el "Responsable" (Administración) a través de los medios de comunicación habituales del condominio o empresa.</p>
+          <p>Última actualización: 28 de octubre de 2025.</p>
+        </div>
+      </div>
+    </div> <!-- Fin #privacyModal -->
+
+
+    <!-- Footer Actualizado -->
+    <footer class="foot-legal muted">
+      © 2025. Desarrollador: Reizo Ramon Atarashi Quintero. Todos los derechos reservados.
+      <br>
+      <a href="#" id="openPrivacyLink" class="btn-link">Aviso de Privacidad</a>
+    </footer>
+    
+  </main>
+
+  <script src="sql-lite.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
+
